@@ -1,0 +1,55 @@
+/
+<script src="https://cdn.jsdelivr.net/npm/golos-js@0.6.1/dist/golos.min.js"></script>
+<script>
+	golos.config.set('websocket', 'wss://ws.testnet.golos.io');
+golos.config.set('chain_id', '5876894a41e6361bde2e73278f07340f2eb8b41c2facd29099de9deef6cdb679');
+</script>
+
+
+<script>
+	var wif = '5KL49WjR4CgdNuQTsNKTUbhWfwrhCkZk23REAKuuWJFV4RVXQrM'; //постинг ключь тестового аккаунта голос - используется как пароль
+	var author = 'way2share1'; // тестовый логин
+	//var permlink = '';//ссылка на пост - используем как категоии у Фондов и единичных пользователей
+	
+	function sendPost(){
+		var body = 'post'; // отображается в Голос. Тело поста "Что у меня есть" или "Что мне надо"
+		//var author =''; // можно вписать автора, если понадобится в будущем для W2S
+		var title = 'postest';// тег. по нему поиск будет сделан
+		var permlink = 'pos-sadsd';// указываем конец урл. Только через "-"
+		var parentPermlink = '';//Тэг поста
+		golos.broadcast.comment(wif, '', parentPermlink, author, permlink, title, body, '', function(err, result) {
+		    if ( ! err ) {
+		    	console.log(result);
+		    } else console.error(err);
+    	});
+	}
+
+	//если хотим создать категорию (пост) то придумываем PARENTPERMLINK и PERMLINK, а если заносим вещи в категорию (коммент под этот пост), то берём с предыдущего поста PERMLINK и указываете его как PARENTPERMLINK
+	function sendComment(){
+		var body = 'ееее'; // то что будет ввидно пользователям в Голосе
+		//var author =''; // имя аккаунта вносящего вещи в блокчейн (делает коментарий)
+		var parentPermlink = 'jkjasdasd';// указываем к какой категории относится вещь 
+		var parentAuthor = 'way2share1';// указываем автора комментария
+		var title = 'test2';// тег
+		var permlink = 'qwertyachckjcnskjcbskjbhjscbsh';// придумываем ссылку
+		golos.broadcast.comment(wif, parentAuthor, parentPermlink, author, permlink, title, body, '', function(err, result) {
+		    if ( ! err ) {
+		    	console.log(result)
+		    } else console.error(err);
+    	});
+	}
+	//username - указываем имя аккаунта, permlink - указываем ссылку на вещь (комментарий) - получаем конкретную вещь
+	function getContent(username, permlink){
+		golos.api.getContent(username, permlink, function(err, result) {
+            if (!err){
+            	console.log(result)
+        	}
+    	});
+	}
+	//username - указываем автора, permlink - указываем категорию (ссылку на пост) - получаем список всех вещей (комментов)
+	function getReplies(username, permlink){
+		golos.api.getContentReplies(username, permlink, function(err, result) {
+  			console.log(err, result);
+		});
+	}
+</script>
